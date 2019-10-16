@@ -136,19 +136,24 @@ class TestHashTable(unittest.TestCase):
         hash.insert('d', '4')
         actual = hash.delete('a')
 
-
         # delete a: return 1
         self.assertEqual('1', actual, "deleted key should return deleted key's value")
-        actual = hash.buckets[hash.get_hash('a')].val
-        self.assertEqual(actual, '4', "after deletion of a linked list with 2 elements, the remaining element should be the head")
 
+        new_head = hash.buckets[hash.get_hash('a')].val
+        self.assertEqual(new_head, '4', "after deletion of a linked list with 2 elements, the remaining element should be the head")
+
+        new_size = hash.size
+        self.assertEqual(new_size, 1, "total elements after deletion should equal to 1")
 
     def test_delete_at_tail(self):
         hash = HashTable()
         hash.insert('a', '1')
         hash.insert('b', '2')
         hash.insert('c', '3')
-        hash.delete('c')
+        actual = hash.delete('c')
 
-        actual_size = hash.size
-        self.assertEqual(actual_size, 2, 'after deletion of a linked list with 3 elements, the remaining elements should equal to 2')
+        # delete c: return 3
+        self.assertEqual('3', actual, "deleted key should return deleted key's value")
+
+        new_size = hash.size
+        self.assertEqual(new_size, 2, "total elements after deletion should equal to 2")
