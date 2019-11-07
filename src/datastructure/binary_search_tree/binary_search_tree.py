@@ -100,6 +100,28 @@ class BinarySearchTree:
 
         return max_height
 
+    def search(self, val):
+        if self.head is None:
+            return False
+
+        curr = self.head
+        while curr:
+            if val < curr.val:
+                if curr.left:
+                    curr = curr.left
+                else:
+                    print(f'Node {val} not found.')
+                    return False
+            elif val > curr.val:
+                if curr.right:
+                    curr = curr.right
+                else:
+                    print(f'Node {val} not found')
+                    return False
+            else:
+                return curr
+
+
     """
     traversals
     """
@@ -250,7 +272,7 @@ class BinarySearchTreeTest(unittest.TestCase):
             tree.insert(d)
 
         actual_count = tree.count
-        expected_count = 20
+        expected_count = 10
 
         tree.print_nodes_level_order()
         print('total before delete: ', actual_count)
@@ -269,6 +291,26 @@ class BinarySearchTreeTest(unittest.TestCase):
         expected_height = 5
         tree.print_nodes_level_order()
         self.assertEqual(actual_height, expected_height, 'height should be 5')
+
+    def test_search_for_existing_value(self):
+        tree = BinarySearchTree()
+        data = [10, 6, 3, 8, 15, 12, 13, 14, 18, 19]
+        for d in data:
+            tree.insert(d)
+
+        actual = tree.search(14).val
+        expected = 14
+        self.assertEqual(actual, expected, "function should return the matched Node's value")
+
+    def test_search_for_non_existing_value(self):
+        tree = BinarySearchTree()
+        data = [10, 6, 3, 8, 15, 12, 13, 14, 18, 19]
+        for d in data:
+            tree.insert(d)
+
+        actual = tree.search(22)
+        expected = False
+        self.assertEqual(actual, expected, "should return False because value doens't exist in tree.")
 
     def test_traverse_inorder(self):
         tree = BinarySearchTree()
