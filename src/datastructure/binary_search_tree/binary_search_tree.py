@@ -139,6 +139,53 @@ class BinarySearchTree:
 
         return max(left, right) + 1
 
+    def balance_the_tree(self):
+        if self.is_balanced():
+            return True
+
+        # find which side is lopsided
+        left_subtree = self.find_tree_height(self.head.left)
+        right_subtree = self.find_tree_height(self.head.right)
+
+        # compare left > right or left < right
+        if left_subtree > right_subtree and abs(left_subtree - right_subtree) > 1:
+            # go into left and get the next largest node
+            next_largest = self.get_largest_node(self.head.left)
+            val = next_largest.val
+
+            node = Node(val)
+            node.left = self.head.left
+            node.right = self.head
+
+            # before updating head to the new node, disconnect head's left pointer
+            self.head.left = None
+            self.head = node
+            node.left = self.recursive_delete_node(node.left, val)
+
+        elif right_subtree > left_subtree and abs(left_subtree - right_subtree) > 1:
+            # go into right and get the next smallest node
+            next_smallest = self.get_smallest_node_value(self.head.right)
+            val = next_smallest.val
+
+            node = Node(val)
+            node.left = self.head
+            node.right = self.head.right
+
+            # before updating head to point to the new node, disconnect head's right pointer
+            self.head.right = None
+            self.head = node
+            node.right = self.recursive_delete_node(node.right, val)
+
+        return self.balance_the_tree()
+
+    def get_largest_node(self, root):
+        curr = root
+
+        while curr.right:
+            curr = curr.right
+
+        return curr
+
     """
     traversals
     """
@@ -338,6 +385,27 @@ class BinarySearchTreeTest(unittest.TestCase):
         actual = tree.is_balanced()
         expected = False
         self.assertEqual(actual, expected, 'should return False because tree height is not balanced')
+
+    def test_balance_the_tree(self):
+        tree = BinarySearchTree()
+        data = [10, 6, 3, 8, 15, 12, 13, 14, 18, 19]
+        for d in data:
+            tree.insert(d)
+
+        tree.print_nodes_level_order()
+
+        tree.balance_the_tree()
+        tree.print_nodes_level_order()
+
+    def test_balance_degenerate_tree(self):
+        tree = BinarySearchTree()
+        data = [5, 4, 3, 2, 1]
+        for d in data:
+            tree.insert(d)
+
+        tree.print_nodes_level_order()
+        tree.balance_the_tree()
+        tree.print_nodes_level_order()
 
     def test_traverse_inorder(self):
         tree = BinarySearchTree()
