@@ -84,7 +84,7 @@ class BinarySearchTree:
             root.right = self.recursive_delete_node(root.right, smallest_node.val)
         return root
 
-    def get_tree_height(self):
+    def get_max_tree_height(self):
         max_height = 1
         stack = [(self.head, 1)]
         while stack:
@@ -121,6 +121,23 @@ class BinarySearchTree:
             else:
                 return curr
 
+    def is_balanced(self):
+        if self.head is None:
+            return False
+
+        left = self.find_tree_height(self.head.left)
+        right = self.find_tree_height(self.head.right)
+
+        return False if abs(left - right) > 1 else True
+
+    def find_tree_height(self, root):
+        if root is None:
+            return 0
+
+        left = self.find_tree_height(root.left)
+        right = self.find_tree_height(root.right)
+
+        return max(left, right) + 1
 
     """
     traversals
@@ -281,13 +298,13 @@ class BinarySearchTreeTest(unittest.TestCase):
 
         self.assertEqual(actual_count, expected_count, 'total number of nodes should remain the same.')
 
-    def test_find_height(self):
+    def test_find_max_tree_height(self):
         tree = BinarySearchTree()
         data = [10, 6, 3, 8, 15, 12, 13, 14, 18, 19]
         for d in data:
             tree.insert(d)
 
-        actual_height = tree.get_tree_height()
+        actual_height = tree.get_max_tree_height()
         expected_height = 5
         tree.print_nodes_level_order()
         self.assertEqual(actual_height, expected_height, 'height should be 5')
@@ -311,6 +328,16 @@ class BinarySearchTreeTest(unittest.TestCase):
         actual = tree.search(22)
         expected = False
         self.assertEqual(actual, expected, "should return False because value doens't exist in tree.")
+
+    def test_tree_is_balanced(self):
+        tree = BinarySearchTree()
+        data = [10, 6, 3, 8, 15, 12, 13, 14, 18, 19]
+        for d in data:
+            tree.insert(d)
+
+        actual = tree.is_balanced()
+        expected = False
+        self.assertEqual(actual, expected, 'should return False because tree height is not balanced')
 
     def test_traverse_inorder(self):
         tree = BinarySearchTree()
