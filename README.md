@@ -22,6 +22,6 @@
 #### Concepts
 - Memory
 - Recursion 
-- Dynamic Programing
+- Dynamic Programming
 - Big O
 
