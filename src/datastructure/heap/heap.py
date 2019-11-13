@@ -79,6 +79,43 @@ class MinHeap:
         print('peek value: ', self.data[1])
         return self.data[1]
 
+    def get_parent_of_val(self, val: int) -> int or None:
+        if val not in self.data:
+            return None
+
+        for i, d in enumerate(self.data):
+            if d == val:
+                return self.data[i // 2]
+
+    def get_left_child_of_val(self, val: int) -> int or None:
+        if val not in self.data:
+            return None
+
+        for i, d in enumerate(self.data):
+            if d == val:
+                if 2 * i <= self.count:
+                    return self.data[2 * i]
+                else:
+                    return None
+
+    def get_right_child_of_val(self, val: int) -> int or None:
+        if val not in self.data:
+            return None
+
+        for i, d in enumerate(self.data):
+            if d == val:
+                if (2 * i) + 1 <= self.count:
+                    return self.data[(2 * i) + 1]
+                else:
+                    return None
+
+    def get_children_of_val(self, val: int) -> list or None:
+        if val not in self.data:
+            return None
+
+        left = self.get_left_child_of_val(val)
+        right = self.get_right_child_of_val(val)
+        return [left, right]
 
 
 class TestMinHeap(unittest.TestCase):
@@ -122,3 +159,53 @@ class TestMinHeap(unittest.TestCase):
         expected = 1
         print('after remove: ',heap.data[1:])
         self.assertEqual(actual, expected, 'the top element, 1, should be removed')
+
+    def test_get_parent_val(self):
+        heap = MinHeap()
+        data = [9, 2, 3, 8, 6, 1, 5, 7]
+        for d in data:
+            heap.insert(d)
+
+        actual = heap.get_parent_of_val(8)
+        expected = 6
+        self.assertEqual(actual, expected, 'the parent of 8 should be 6.')
+
+    def test_get_left_child_of_val(self):
+        heap = MinHeap()
+        data = [9, 2, 3, 8, 6, 1, 5, 7]
+        for d in data:
+            heap.insert(d)
+
+        actual = heap.get_left_child_of_val(6)
+        expected = 7
+        self.assertEqual(actual, expected, 'the left child of 6 should be 7.')
+
+    def test_get_invalid_left_child(self):
+        heap = MinHeap()
+        data = [9, 2, 3, 8, 6, 1, 5, 7]
+        for d in data:
+            heap.insert(d)
+
+        actual = heap.get_left_child_of_val(9)
+        expected = None
+        self.assertEqual(actual, expected, 'the left child of 9 should be None.')
+
+    def test_get_right_child_of_val(self):
+        heap = MinHeap()
+        data = [9, 2, 3, 8, 6, 1, 5, 7]
+        for d in data:
+            heap.insert(d)
+
+        actual = heap.get_right_child_of_val(6)
+        expected = 8
+        self.assertEqual(actual, expected, 'the right child of 6 should be 8.')
+
+    def test_get_children_of_val(self):
+        heap = MinHeap()
+        data = [9, 2, 3, 8, 6, 1, 5, 7]
+        for d in data:
+            heap.insert(d)
+
+        actual = heap.get_children_of_val(2)
+        expected = [3, 5]
+        self.assertEqual(actual, expected, 'the children of 6 should be [3, 5].')
